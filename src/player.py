@@ -125,7 +125,7 @@ class Player:
         return f"{self.first_name} {self.last_name}"
 
     @classmethod
-    def generate_player(cls, seed: int | None) -> "Player":
+    def generate_player(cls, seed: int | None=None) -> "Player":
         if seed is not None:
             random.seed(seed)
 

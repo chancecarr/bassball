@@ -1,7 +1,7 @@
-from player import Player
+from team import Team
 
 def main():
-    print(Player.generate_player(1))
+    print(Team.generate_team(1))
 
 if __name__ == "__main__":
     main()
