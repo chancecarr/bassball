@@ -1,6 +1,7 @@
 import pytest
 from team import Team
 from player import Player
+import random
 
 def test_team_generation():
     expected = Team(
@@ -53,5 +54,5 @@ def test_team_generation():
             )
         }
     )
-    actual = Team.generate_team(1)
+    actual = Team.generate_team(random.Random(1))
     assert actual == expected

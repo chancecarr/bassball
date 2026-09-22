@@ -125,22 +125,32 @@ class Player:
         return f"{self.first_name} {self.last_name}"
 
     @classmethod
-    def generate_player(cls, seed: int | None=None) -> "Player":
-        if seed is not None:
-            random.seed(seed)
+    def generate_player(cls, rng: random.Random | None = None) -> "Player":
+        first_name: str
+        last_name: str
 
-        first_name = random.choice(FIRST_NAMES)
-        last_name = random.choice(LAST_NAMES)
-        stats = Player.generate_stats()
+        if rng is not None:
+            first_name = rng.choice(FIRST_NAMES)
+            last_name = rng.choice(LAST_NAMES)
+        else:
+            first_name = random.choice(FIRST_NAMES)
+            last_name = random.choice(LAST_NAMES)
+
+        stats = Player.generate_stats(rng)
         return Player(first_name, last_name, stats)
 
     @classmethod
-    def generate_stats(cls) -> dict[str, dict[str, int]]:
+    def generate_stats(cls, rng: random.Random | None = None) -> dict[str, dict[str, int]]:
         stats: dict[str, dict[str, int]] = dict()
+        overall_pts: int
 
         # Magic numbers in use here. I'm targeting an average of 70 across a player's skill stats, with reasonable variation due to natural talent.
-        overall_pts: int = int(random.gauss(560, 40))
-        stat_distribution: list[int] = Player.distribute_with_min(overall_pts, 8)
+        if rng is not None:
+            overall_pts = int(rng.gauss(560, 40))
+        else:
+            overall_pts = int(random.gauss(560, 40))
+        stat_distribution: list[int] = Player.distribute_with_min(overall_pts, 8, rng)
+
 
         for category in STATS:
             stats[category] = {}
@@ -150,13 +160,18 @@ class Player:
         return stats
 
     @classmethod
-    def distribute_with_min(cls, total, num_attributes):
+    def distribute_with_min(cls, total: int, num_attributes: int, rng: random.Random | None = None):
         # Players in Bassball have a minimum base level of athleticism across their stats
         min_val: int = (total // num_attributes) // 2
         free_points: int = total - (min_val * num_attributes)
+        cuts: list[int]
 
         # Points distributed using stars and bars algorithm
-        cuts: list[int] = sorted(random.sample(range(1, free_points), num_attributes - 1))
+        if rng is not None:
+            cuts = sorted(rng.sample(range(1, free_points), num_attributes - 1))
+        else:
+            cuts = sorted(random.sample(range(1, free_points), num_attributes - 1))
+
         distributed: list[int] = [a - b for a, b in zip(cuts + [free_points], [0] + cuts)]
 
         return [val + min_val for val in distributed]

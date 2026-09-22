@@ -123,15 +123,18 @@ class Team:
         return cycle(sorted(self.roster.values(), reverse=True, key=lambda player: sum(player.stats["Batting"].values())))
 
     @classmethod
-    def generate_team(cls, seed: int | None=None) -> "Team":
-        if seed is not None:
-            random.seed(seed)
-
+    def generate_team(cls, rng: random.Random | None = None) -> "Team":
         roster: dict[str, Player] = dict()
-        name = f"The {random.choice(TEAM_HOMES)} {random.choice(TEAM_MASCOTS)}"
+        name: str
+
+        if rng is not None:
+            name = f"The {rng.choice(TEAM_HOMES)} {rng.choice(TEAM_MASCOTS)}"
+        else:
+            name = f"The {random.choice(TEAM_HOMES)} {random.choice(TEAM_MASCOTS)}"
+
         # Positions are randomly assigned for now
         for position in POSITIONS:
-            roster[position] = Player.generate_player()
+            roster[position] = Player.generate_player(rng)
 
         return Team(name, roster)
 

@@ -1,5 +1,6 @@
 import pytest
 from player import Player
+import random
 
 def test_player_generation():
     expected_stats = {
@@ -9,5 +10,5 @@ def test_player_generation():
         "Fielding": {"Catching": 84, "Sense": 98},
     }
     expected: Player = Player("Roe", "Kelpmoss", expected_stats)
-    actual = Player.generate_player(1)
+    actual = Player.generate_player(random.Random(1))
     assert expected == actual
