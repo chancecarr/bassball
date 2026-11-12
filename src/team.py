@@ -108,23 +108,26 @@ TEAM_MASCOTS = [
     "Tacklebox Trash",
     "Tuna Canners",
 ]
-POSITIONS = ["P", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
 
 @dataclass
 class Team:
     name: str
-    roster: dict[str, Player]
+    roster: list[Player]
 
     def __post_init__(self):
         self.batting_order: cycle[Player] = self.generate_batting_order()
+        for player in self.roster:
+            print(player.full_name)
+            print(player.stats["Pitching"].values())
+        self.pitcher: Player = max(self.roster, key=lambda x: sum(x.stats["Pitching"].values()))
 
     def generate_batting_order(self) -> cycle[Player]:
         # Batting order is sorted by the sum of overall batting stats, descending. Not completely true to real-life baseball, but serviceable.
-        return cycle(sorted(self.roster.values(), reverse=True, key=lambda player: sum(player.stats["Batting"].values())))
+        return cycle(sorted(self.roster, reverse=True, key=lambda player: sum(player.stats["Batting"].values())))
 
     @classmethod
     def generate_team(cls, rng: random.Random | None = None) -> "Team":
-        roster: dict[str, Player] = dict()
+        roster: list[Player]
         name: str
 
         if rng is not None:
@@ -132,9 +135,7 @@ class Team:
         else:
             name = f"The {random.choice(TEAM_HOMES)} {random.choice(TEAM_MASCOTS)}"
 
-        # Positions are randomly assigned for now
-        for position in POSITIONS:
-            roster[position] = Player.generate_player(rng)
+        roster = [Player.generate_player(rng) for _ in range(9)]
 
         return Team(name, roster)
 

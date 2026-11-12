@@ -1,4 +1,5 @@
 from team import Team
+from player import Player
 from enum import Enum
 from bases import Bases
 from dataclasses import dataclass, field
