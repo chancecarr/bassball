@@ -175,3 +175,21 @@ class Player:
         distributed: list[int] = [a - b for a, b in zip(cuts + [free_points], [0] + cuts)]
 
         return [val + min_val for val in distributed]
+
+    # Returns 3 pitch stats: accuracy, power, and trickiness
+    def throw_pitch(self, rng: random.Random | None = None) -> tuple[int, int, int]:
+        if rng is not None:
+            power_variation = rng.gauss(0, 20)
+            accuracy_variation = rng.gauss(0, 20)
+            trickiness_variation = rng.gauss(0, 20)
+        else:
+            power_variation = random.gauss(0, 20)
+            accuracy_variation = random.gauss(0, 20)
+            trickiness_variation = random.gauss(0, 20)
+
+        power = self.stats["Pitching"]["Arm"] + power_variation
+        accuracy = self.stats["Pitching"]["Technique"] + accuracy_variation
+        trickiness = self.stats["Fielding"]["Sense"] + trickiness_variation
+        return int(power), int(accuracy), int(trickiness)
+
+        

@@ -22,6 +22,9 @@ class GameEngine:
 
     def play_at_bat(self, game: Game, batter: Player, balls: int, strikes: int, rng: random.Random | None = None) -> Game:
         fielding_team = game.home if game.half == Half.TOP else game.away
+        pitcher = fielding_team.pitcher
+
+        pitch_accuracy, pitch_power, pitch_trickiness = pitcher.throw_pitch(rng)
 
         # Simulate pitch
         #   - In strike zone?
@@ -37,4 +40,5 @@ class GameEngine:
         # Simulate run
         #   - Number of bases?
         #   - Fielder's choice
+
         

@@ -12,3 +12,10 @@ def test_player_generation():
     expected: Player = Player("Roe", "Kelpmoss", expected_stats)
     actual = Player.generate_player(random.Random(1))
     assert expected == actual
+
+def test_throw_pitch():
+    rng = random.Random(1)
+    expected = (73, 63, 100)
+    player = Player.generate_player(rng)
+    actual = player.throw_pitch(rng)
+    assert expected == actual
